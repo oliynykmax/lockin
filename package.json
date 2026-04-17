@@ -4,8 +4,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bunx serve public -p 3000",
-    "deploy": "wrangler pages deploy public --project-name=lockin --branch=main"
+    "dev": "bunx vite",
+    "build": "bunx vite build",
+    "preview": "bunx vite preview",
+    "deploy": "bun run build && wrangler pages deploy dist --project-name=lockin --branch=main"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.2",
@@ -24,7 +26,10 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
+    "radix-ui": "^1.4.3",
     "react": "^19.2.5",
+    "react-day-picker": "^9.14.0",
     "react-dom": "^19.2.5"
   }
 }
