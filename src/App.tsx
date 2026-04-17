@@ -50,9 +50,9 @@ export default function App() {
   const completedTasks = tasks.filter((t) => t.completed);
 
   return (
-    <div className="max-w-[1080px] mx-auto px-4 md:px-8 min-h-dvh flex flex-col">
+    <div className="max-w-[1080px] mx-auto px-4 md:px-8 h-dvh flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between py-6 pb-4">
+      <header className="flex items-center justify-between py-6 pb-4 shrink-0">
         <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-[1.9rem] font-bold tracking-tight text-foreground">
           lockin<span className="text-primary">.</span>
         </h1>
@@ -106,19 +106,21 @@ export default function App() {
       </header>
 
       {/* Main: 2-column grid */}
-      <main className="grid grid-cols-1 md:grid-cols-[5fr_4fr] gap-5 md:gap-10 flex-1 items-start">
-        {/* Left: Hero Timer (sticky on desktop) */}
-        <section className="md:sticky md:top-6">
+      <main className="grid grid-cols-1 md:grid-cols-[5fr_4fr] grid-rows-[auto_1fr] md:grid-rows-1 gap-5 md:gap-10 flex-1 min-h-0 overflow-hidden">
+        {/* Left: Hero Timer */}
+        <section className="shrink-0">
           <HeroTimer tasks={tasks} mode={mode} />
         </section>
 
         {/* Right: Tasks */}
-        <section className="min-w-0 space-y-6">
+        <section className="min-w-0 flex flex-col min-h-0 overflow-hidden">
           {/* Add Task */}
-          <AddTaskForm onAdd={addTask} />
+          <div className="shrink-0">
+            <AddTaskForm onAdd={addTask} />
+          </div>
 
-          {/* Task List */}
-          <div className="space-y-2.5">
+          {/* Task List — scrollable area */}
+          <div className="flex-1 overflow-y-auto space-y-2.5 min-h-0 py-1">
             {activeTasks.map((task, i) => (
               <TaskItem
                 key={task.id}
@@ -153,39 +155,39 @@ export default function App() {
                 onLockOut={handleLockOut}
               />
             ))}
-          </div>
 
-          {/* Empty State */}
-          {tasks.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-muted-foreground/40 mb-3 flex justify-center">
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M8 12l2.5 2.5L16 9" />
-                </svg>
+            {/* Empty State */}
+            {tasks.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-muted-foreground/40 mb-3 flex justify-center">
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M8 12l2.5 2.5L16 9" />
+                  </svg>
+                </div>
+                <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-muted-foreground mb-1">
+                  no tasks yet
+                </p>
+                <p className="text-sm text-muted-foreground/60">
+                  add one above to start lockin in
+                </p>
               </div>
-              <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-muted-foreground mb-1">
-                no tasks yet
-              </p>
-              <p className="text-sm text-muted-foreground/60">
-                add one above to start lockin in
-              </p>
-            </div>
-          )}
+            )}
+          </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="py-7 text-center text-xs text-muted-foreground/60 tracking-wide">
+      <footer className="py-5 text-center text-xs text-muted-foreground/60 tracking-wide shrink-0">
         stay focused. stay lockin.
       </footer>
     </div>
