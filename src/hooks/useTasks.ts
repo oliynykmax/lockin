@@ -19,6 +19,7 @@ export function useTasks() {
       subtasks: [],
       createdAt: Date.now(),
       lockedInAt: null,
+      timeSpentMs: 0,
     };
     setTasks((prev) => [...prev, task]);
   }, []);
@@ -26,7 +27,7 @@ export function useTasks() {
   const completeTask = useCallback((id: string) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed, lockedInAt: null } : t
+        t.id === id ? { ...t, completed: !t.completed, lockedInAt: null, timeSpentMs: t.lockedInAt ? t.timeSpentMs + (Date.now() - t.lockedInAt) : t.timeSpentMs } : t
       )
     );
   }, []);
@@ -96,7 +97,7 @@ export function useTasks() {
         if (t.completed) return t;
         if (t.id === id) return { ...t, lockedInAt: Date.now() };
         // Unlock any other task that was locked in
-        if (t.lockedInAt !== null) return { ...t, lockedInAt: null };
+        if (t.lockedInAt !== null) return { ...t, lockedInAt: null, timeSpentMs: t.timeSpentMs + (Date.now() - t.lockedInAt) };
         return t;
       })
     );
@@ -104,7 +105,11 @@ export function useTasks() {
 
   const lockOut = useCallback((id: string) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, lockedInAt: null } : t))
+      prev.map((t) =>
+        t.id === id
+          ? { ...t, lockedInAt: null, timeSpentMs: t.lockedInAt ? t.timeSpentMs + (Date.now() - t.lockedInAt) : t.timeSpentMs }
+          : t
+      )
     );
   }, []);
 

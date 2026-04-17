@@ -24,8 +24,11 @@ export function HeroTimer({ tasks, mode }: HeroTimerProps) {
   // ── Lock-in mode ──
   if (mode === "lockin") {
     const isIdle = !lockedTask;
-    const elapsed = lockedTask?.lockedInAt
-      ? formatElapsed(Date.now() - lockedTask.lockedInAt)
+    const totalMs = lockedTask?.lockedInAt
+      ? lockedTask.timeSpentMs + (Date.now() - lockedTask.lockedInAt)
+      : 0;
+    const elapsed = totalMs > 0
+      ? formatElapsed(totalMs)
       : { days: "00", hours: "00", mins: "00", secs: "00" };
 
     const isPastDeadline =

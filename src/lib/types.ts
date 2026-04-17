@@ -11,6 +11,7 @@ export interface Task {
   subtasks: Subtask[];
   createdAt: number;
   lockedInAt: number | null;
+  timeSpentMs: number;
 }
 
 export type TimerMode = "countdown" | "lockin";

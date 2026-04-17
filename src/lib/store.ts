@@ -17,10 +17,10 @@ export function loadTasks(): Task[] {
     const raw = localStorage.getItem(STORE_KEY);
     if (!raw) return [];
     const tasks: Task[] = JSON.parse(raw);
-    // Migration: ensure lockedInAt exists on all tasks
     return tasks.map((t) => ({
       ...t,
       lockedInAt: t.lockedInAt ?? null,
+      timeSpentMs: t.timeSpentMs ?? 0,
     }));
   } catch {
     return [];
