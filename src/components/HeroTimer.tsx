@@ -72,13 +72,10 @@ export function HeroTimer({ tasks }: HeroTimerProps) {
           </div>
         )}
 
-        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-center justify-items-center gap-x-2 md:gap-x-3 mb-4">
+        <div className="flex items-start justify-center gap-3 md:gap-5 mb-4">
           <DigitGroup value={cd.days} label="days" pulse={isOverdue} />
-          <Separator />
           <DigitGroup value={cd.hours} label="hrs" pulse={isOverdue} />
-          <Separator />
           <DigitGroup value={cd.mins} label="min" pulse={isOverdue} />
-          <Separator />
           <DigitGroup value={cd.secs} label="sec" pulse={isOverdue} />
         </div>
 
@@ -107,7 +104,7 @@ function DigitGroup({
   pulse: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center w-[56px] md:w-[80px]">
       <span
         className={`font-[family-name:var(--font-display)] text-[2.2rem] md:text-[4.5rem] font-bold leading-none text-white tabular-nums ${
           pulse ? "animate-pulse-urgent" : ""
@@ -122,10 +119,3 @@ function DigitGroup({
   );
 }
 
-function Separator() {
-  return (
-    <span className="font-[family-name:var(--font-display)] text-[1.4rem] md:text-[3rem] font-bold text-white/35 leading-none self-start mt-1 md:mt-2">
-      :
-    </span>
-  );
-}
