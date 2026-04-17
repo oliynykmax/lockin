@@ -1,15 +1,16 @@
 # lockin
 
-Countdown timer for tasks. Add a deadline, watch it tick, get it done.
+Task timer with two modes: countdown to deadline, or lock-in to track time spent.
 
 **[lockin-dob.pages.dev](https://lockin-dob.pages.dev)**
 
-## features
+## what it does
 
-- Live countdown to your next deadline
+- **Countdown** — shows time remaining until your next deadline
+- **Lock-in** — count-up timer that tracks how long you've been working on a task; persists across sessions
 - Subtasks, reordering, overdue alerts
 - Dark mode
-- Local storage — no sign-up
+- Everything in local storage, no account needed
 
 ## dev
 
@@ -24,8 +25,8 @@ bun run dev
 bun run deploy
 ```
 
-Cloudflare Pages via Wrangler.
+Cloudflare Pages via Wrangler. Auto-deploys on commit.
 
 ## stack
 
-React · Vite · Tailwind CSS · Radix UI · Bun
+React · Vite · Tailwind · Radix · Bun
