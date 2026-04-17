@@ -1,6 +1,7 @@
 // ============================================
-// LOCKIN — App Logic
+// LOCKIN — App Logic v2
 // Tasks, subtasks, timers, localStorage, sorting
+// Custom date/time inputs with quick pills
 // ============================================
 
 const STORE_KEY = 'lockin_tasks';
@@ -24,9 +25,11 @@ const emptyState = $('#empty-state');
 const addBtn     = $('#add-task-btn');
 const addForm    = $('#add-task-form');
 const titleInput = $('#task-title-input');
-const deadlineInput = $('#task-deadline-input');
+const dateInput  = $('#task-date-input');
+const timeInput  = $('#task-time-input');
 const cancelBtn  = $('#cancel-add-btn');
 const themeToggle = $('#theme-toggle');
+const pills      = document.querySelectorAll('.pill[data-offset]');
 
 // --- Utility ---
 function uid() {
@@ -48,7 +51,6 @@ function load() {
 
 function formatCountdown(ms) {
   if (ms <= 0) {
-    // Show count-up for overdue
     const overSec = Math.floor(Math.abs(ms) / 1000);
     const days  = String(Math.floor(overSec / 86400)).padStart(2, '0');
     const hours = String(Math.floor((overSec % 86400) / 3600)).padStart(2, '0');
@@ -89,6 +91,47 @@ function formatDeadline(iso) {
     month: 'short', day: 'numeric',
     hour: '2-digit', minute: '2-digit'
   });
+}
+
+// --- Combine date + time inputs into ISO string ---
+function getDeadlineFromInputs() {
+  const dateVal = dateInput.value;
+  const timeVal = timeInput.value;
+
+  if (!dateVal && !timeVal) return null;
+
+  // If we have both, combine them
+  if (dateVal && timeVal) {
+    return `${dateVal}T${timeVal}`;
+  }
+
+  // If only date, use end of day
+  if (dateVal) {
+    return `${dateVal}T23:59`;
+  }
+
+  // If only time, use today's date (local)
+  const today = new Date();
+  const ty = today.getFullYear();
+  const tm = String(today.getMonth() + 1).padStart(2, '0');
+  const td = String(today.getDate()).padStart(2, '0');
+  const todayStr = `${ty}-${tm}-${td}`;
+  return `${todayStr}T${timeVal}`;
+}
+
+// --- Set date/time inputs from an offset (quick pills) ---
+function setDeadlineFromOffset(totalSeconds) {
+  const future = new Date(Date.now() + totalSeconds * 1000);
+  const y = future.getFullYear();
+  const m = String(future.getMonth() + 1).padStart(2, '0');
+  const d = String(future.getDate()).padStart(2, '0');
+  dateInput.value = `${y}-${m}-${d}`;
+  timeInput.value = future.toTimeString().slice(0, 5);
+
+  // Highlight the active pill
+  pills.forEach(p => p.classList.remove('active'));
+  const matched = document.querySelector(`.pill[data-offset="${totalSeconds}"]`);
+  if (matched) matched.classList.add('active');
 }
 
 // --- Hero Timer ---
@@ -162,12 +205,10 @@ function render() {
   const activeTasks = tasks.filter(t => !t.completed);
   const completedTasks = tasks.filter(t => t.completed);
 
-  // Show active tasks in their saved order
   activeTasks.forEach((task, i) => {
     taskListEl.appendChild(createTaskEl(task, i, activeTasks.length));
   });
 
-  // Show completed at the bottom
   completedTasks.forEach((task) => {
     taskListEl.appendChild(createTaskEl(task, -1, -1));
   });
@@ -265,20 +306,16 @@ function completeTask(id) {
   const task = tasks.find(t => t.id === id);
   if (!task || task.completed) return;
 
-  // Mark as completed in state and save immediately for data integrity
   task.completed = true;
   save();
 
-  // Animate the checkbox first
   const check = el.querySelector('.circle-check');
   check.classList.add('checked');
 
-  // Then animate the whole task out
   setTimeout(() => {
     el.classList.add('completing');
   }, 200);
 
-  // After animation finishes, re-render (filter by animation name to avoid child animations)
   let handled = false;
   const finish = () => {
     if (handled) return;
@@ -292,7 +329,6 @@ function completeTask(id) {
     }
   }, { once: true });
 
-  // Fallback: if animationend doesn't fire (e.g. reduced motion), force after timeout
   setTimeout(finish, 800);
 }
 
@@ -317,7 +353,6 @@ function moveTask(id, direction) {
   const newIdx = idx + direction;
   if (newIdx < 0 || newIdx >= activeTasks.length) return;
 
-  // Swap in the full tasks array
   const fullIdx = tasks.findIndex(t => t.id === activeTasks[idx].id);
   const fullNewIdx = tasks.findIndex(t => t.id === activeTasks[newIdx].id);
   [tasks[fullIdx], tasks[fullNewIdx]] = [tasks[fullNewIdx], tasks[fullIdx]];
@@ -402,6 +437,18 @@ taskListEl.addEventListener('keydown', (e) => {
   }
 });
 
+// --- Quick Pills ---
+pills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    const offset = parseInt(pill.dataset.offset);
+    setDeadlineFromOffset(offset);
+  });
+});
+
+// Clear pill highlights when manually editing date/time
+if (dateInput) dateInput.addEventListener('input', () => pills.forEach(p => p.classList.remove('active')));
+if (timeInput) timeInput.addEventListener('input', () => pills.forEach(p => p.classList.remove('active')));
+
 // --- Add Task Form ---
 addBtn.addEventListener('click', () => {
   addBtn.style.display = 'none';
@@ -413,16 +460,19 @@ cancelBtn.addEventListener('click', () => {
   addForm.classList.remove('visible');
   addBtn.style.display = '';
   addForm.reset();
+  pills.forEach(p => p.classList.remove('active'));
 });
 
 addForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const title = titleInput.value.trim();
   if (!title) return;
-  addTask(title, deadlineInput.value || null);
+  const deadline = getDeadlineFromInputs();
+  addTask(title, deadline);
   addForm.classList.remove('visible');
   addBtn.style.display = '';
   addForm.reset();
+  pills.forEach(p => p.classList.remove('active'));
 });
 
 // --- Theme ---
@@ -446,7 +496,6 @@ themeToggle.addEventListener('click', () => {
 
 // --- Global Timer Loop ---
 function startTimerLoop() {
-  // Use a single interval — compute remaining time from absolute deadline each tick
   timerInterval = setInterval(() => {
     updateHero();
     updateTaskTimers();

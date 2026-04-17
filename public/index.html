@@ -14,76 +14,99 @@
     <header class="app-header">
       <h1 class="logo">lockin<span class="logo-accent">.</span></h1>
       <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-        <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
-        <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
         </svg>
       </button>
     </header>
 
     <main class="app-main">
-      <!-- Hero Timer -->
-      <section class="hero" id="hero">
-        <div class="hero-inner">
-          <div class="hero-digits">
-            <div class="digit-group">
-              <span class="digit-value" id="hero-days">00</span>
-              <span class="digit-label">days</span>
+      <!-- Left: Hero Timer (sticky on desktop) -->
+      <section class="hero-col">
+        <div class="hero" id="hero">
+          <div class="hero-noise"></div>
+          <div class="hero-glow"></div>
+          <div class="hero-inner">
+            <div class="hero-digits">
+              <div class="digit-group">
+                <span class="digit-value" id="hero-days">00</span>
+                <span class="digit-label">days</span>
+              </div>
+              <span class="digit-sep">:</span>
+              <div class="digit-group">
+                <span class="digit-value" id="hero-hours">00</span>
+                <span class="digit-label">hrs</span>
+              </div>
+              <span class="digit-sep">:</span>
+              <div class="digit-group">
+                <span class="digit-value" id="hero-mins">00</span>
+                <span class="digit-label">min</span>
+              </div>
+              <span class="digit-sep">:</span>
+              <div class="digit-group">
+                <span class="digit-value" id="hero-secs">00</span>
+                <span class="digit-label">sec</span>
+              </div>
             </div>
-            <span class="digit-sep">:</span>
-            <div class="digit-group">
-              <span class="digit-value" id="hero-hours">00</span>
-              <span class="digit-label">hrs</span>
-            </div>
-            <span class="digit-sep">:</span>
-            <div class="digit-group">
-              <span class="digit-value" id="hero-mins">00</span>
-              <span class="digit-label">min</span>
-            </div>
-            <span class="digit-sep">:</span>
-            <div class="digit-group">
-              <span class="digit-value" id="hero-secs">00</span>
-              <span class="digit-label">sec</span>
-            </div>
+            <p class="hero-task-name" id="hero-task-name">add your first task</p>
+            <p class="hero-deadline" id="hero-deadline"></p>
           </div>
-          <p class="hero-task-name" id="hero-task-name">add your first task</p>
-          <p class="hero-deadline" id="hero-deadline"></p>
         </div>
       </section>
 
-      <!-- Add Task -->
-      <section class="add-section">
-        <button class="add-btn" id="add-task-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          add a task
-        </button>
-        <form class="add-form" id="add-task-form">
-          <div class="form-row">
-            <input type="text" id="task-title-input" placeholder="what do you need to do?" required autocomplete="off">
-          </div>
-          <div class="form-row">
-            <label class="deadline-label" for="task-deadline-input">deadline</label>
-            <input type="datetime-local" id="task-deadline-input">
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">add task</button>
-            <button type="button" class="btn-ghost" id="cancel-add-btn">cancel</button>
-          </div>
-        </form>
-      </section>
+      <!-- Right: Tasks (scrollable) -->
+      <section class="tasks-col">
+        <!-- Add Task -->
+        <section class="add-section">
+          <button class="add-btn" id="add-task-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            add a task
+          </button>
+          <form class="add-form" id="add-task-form">
+            <div class="form-row">
+              <input type="text" id="task-title-input" placeholder="what do you need to do?" required autocomplete="off">
+            </div>
+            <div class="form-row">
+              <label class="deadline-label">deadline</label>
+              <div class="quick-pills">
+                <button type="button" class="pill" data-offset="3600">1h</button>
+                <button type="button" class="pill" data-offset="7200">2h</button>
+                <button type="button" class="pill" data-offset="86400">tomorrow</button>
+                <button type="button" class="pill" data-offset="172800">2 days</button>
+                <button type="button" class="pill" data-offset="604800">1 week</button>
+              </div>
+              <div class="datetime-fields">
+                <div class="datetime-field">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <input type="date" id="task-date-input">
+                </div>
+                <div class="datetime-field">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <input type="time" id="task-time-input">
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">add task</button>
+              <button type="button" class="btn-ghost" id="cancel-add-btn">cancel</button>
+            </div>
+          </form>
+        </section>
 
-      <!-- Task List -->
-      <section class="tasks-section">
-        <ul class="task-list" id="task-list"></ul>
-        <div class="empty-state" id="empty-state">
-          <div class="empty-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+        <!-- Task List -->
+        <section class="tasks-section">
+          <ul class="task-list" id="task-list"></ul>
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+            </div>
+            <p class="empty-title">no tasks yet</p>
+            <p class="empty-sub">add one above to start lockin in</p>
           </div>
-          <p class="empty-title">no tasks yet</p>
-          <p class="empty-sub">add one above to start lockin in</p>
-        </div>
+        </section>
       </section>
     </main>
 
