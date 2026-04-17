@@ -72,7 +72,7 @@ export function HeroTimer({ tasks }: HeroTimerProps) {
           </div>
         )}
 
-        <div className="flex items-start justify-center gap-3 md:gap-5 mb-4">
+        <div className="flex items-start justify-center gap-6 md:gap-10 mb-4">
           <DigitGroup value={cd.days} label="days" pulse={isOverdue} />
           <DigitGroup value={cd.hours} label="hrs" pulse={isOverdue} />
           <DigitGroup value={cd.mins} label="min" pulse={isOverdue} />
