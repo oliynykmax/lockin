@@ -6,26 +6,26 @@
 
 /* --- Custom Properties --- */
 :root {
-  /* Light theme */
-  --bg:              oklch(97% 0.015 290);
-  --bg-subtle:       oklch(94% 0.02 290);
-  --bg-card:         oklch(99% 0.005 290 / 0.82);
-  --bg-card-solid:   oklch(99% 0.005 290);
-  --fg:              oklch(22% 0.06 290);
-  --fg-muted:        oklch(42% 0.06 290);
-  --fg-dim:          oklch(62% 0.04 290);
+  /* Light theme — warm brownish cream */
+  --bg:              oklch(96% 0.018 70);
+  --bg-subtle:       oklch(93% 0.024 70);
+  --bg-card:         oklch(98% 0.008 70 / 0.88);
+  --bg-card-solid:   oklch(98% 0.008 70);
+  --fg:              oklch(22% 0.04 55);
+  --fg-muted:        oklch(40% 0.05 55);
+  --fg-dim:          oklch(60% 0.035 60);
   --accent:          oklch(55% 0.26 290);
   --accent-light:    oklch(70% 0.2 290);
-  --accent-glow:     oklch(55% 0.26 290 / 0.15);
+  --accent-glow:     oklch(55% 0.26 290 / 0.12);
   --accent-hover:    oklch(48% 0.28 290);
   --gradient-hero:   linear-gradient(145deg, oklch(82% 0.1 290) 0%, oklch(72% 0.16 290) 35%, oklch(60% 0.24 290) 70%, oklch(52% 0.28 290) 100%);
   --gradient-accent: linear-gradient(135deg, oklch(55% 0.26 290), oklch(70% 0.2 290));
-  --border:          oklch(55% 0.26 290 / 0.1);
-  --border-strong:   oklch(55% 0.26 290 / 0.2);
-  --shadow-sm:       0 1px 3px oklch(30% 0.05 290 / 0.06);
-  --shadow-md:       0 4px 16px oklch(30% 0.05 290 / 0.08), 0 1px 3px oklch(30% 0.05 290 / 0.04);
-  --shadow-lg:       0 12px 40px oklch(30% 0.05 290 / 0.1), 0 2px 8px oklch(30% 0.05 290 / 0.06);
-  --noise-opacity:   0.018;
+  --border:          oklch(40% 0.03 55 / 0.12);
+  --border-strong:   oklch(40% 0.03 55 / 0.22);
+  --shadow-sm:       0 1px 3px oklch(25% 0.03 55 / 0.06);
+  --shadow-md:       0 4px 16px oklch(25% 0.03 55 / 0.08), 0 1px 3px oklch(25% 0.03 55 / 0.04);
+  --shadow-lg:       0 12px 40px oklch(25% 0.03 55 / 0.1), 0 2px 8px oklch(25% 0.03 55 / 0.06);
+  --noise-opacity:   0.02;
   --overdue:         oklch(62% 0.22 25);
   --overdue-bg:      oklch(62% 0.22 25 / 0.08);
   --radius-sm:       10px;
