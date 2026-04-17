@@ -1,0 +1,16 @@
+{
+  "name": "lockin",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bunx serve public -p 3000",
+    "deploy": "wrangler pages deploy public --project-name=lockin"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
