@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "bunx serve public -p 3000",
-    "deploy": "wrangler pages deploy public --project-name=lockin"
+    "deploy": "wrangler pages deploy public --project-name=lockin --branch=main"
   },
   "devDependencies": {
     "@types/bun": "latest"
