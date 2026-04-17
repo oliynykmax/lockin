@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Sun, Moon, Target, Hourglass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroTimer } from "@/components/HeroTimer";
@@ -26,24 +27,24 @@ export default function App() {
   const { theme, toggleTheme, mode, setTimerMode: _setTimerMode } = useTheme();
 
   // When manually switching to countdown, clear any active lock-in
-  const setTimerMode = (m: TimerMode) => {
+  const setTimerMode = useCallback((m: TimerMode) => {
     if (m === "countdown") {
       const locked = tasks.find((t) => t.lockedInAt && !t.completed);
       if (locked) lockOut(locked.id);
     }
     _setTimerMode(m);
-  };
+  }, [tasks, lockOut, _setTimerMode]);
 
   // Wrapping lockIn to also switch to lock-in mode automatically
-  const handleLockIn = (id: string) => {
+  const handleLockIn = useCallback((id: string) => {
     lockIn(id);
     setTimerMode("lockin");
-  };
+  }, [lockIn, setTimerMode]);
 
   // Switch back to countdown when unlocking (setTimerMode clears the locked task)
-  const handleLockOut = (_id: string) => {
+  const handleLockOut = useCallback((_id: string) => {
     setTimerMode("countdown");
-  };
+  }, [setTimerMode]);
 
   const activeTasks = tasks.filter((t) => !t.completed);
   const completedTasks = tasks.filter((t) => t.completed);
@@ -66,7 +67,8 @@ export default function App() {
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               )}
-              title="Countdown mode"
+              aria-pressed={mode === "countdown"}
+              aria-label="Countdown mode"
             >
               <Hourglass className="size-3" />
               <span className="hidden sm:inline">countdown</span>
@@ -76,10 +78,11 @@ export default function App() {
               className={cn(
                 "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium font-[family-name:var(--font-display)] tracking-wide transition-all",
                 mode === "lockin"
-                  ? "bg-emerald-600 text-white shadow-sm"
+                  ? "bg-lockin text-lockin-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               )}
-              title="Lock-in mode"
+              aria-pressed={mode === "lockin"}
+              aria-label="Lock-in mode"
             >
               <Target className="size-3" />
               <span className="hidden sm:inline">lock-in</span>

@@ -17,11 +17,21 @@ export function loadTasks(): Task[] {
     const raw = localStorage.getItem(STORE_KEY);
     if (!raw) return [];
     const tasks: Task[] = JSON.parse(raw);
-    return tasks.map((t) => ({
-      ...t,
-      lockedInAt: t.lockedInAt ?? null,
-      timeSpentMs: t.timeSpentMs ?? 0,
-    }));
+    return tasks.map((t) => {
+      // Auto-expire stale lock-in sessions older than 4 hours
+      const maxSessionMs = 4 * 60 * 60 * 1000;
+      const lockedInAt = t.lockedInAt
+        ? (Date.now() - t.lockedInAt > maxSessionMs ? null : t.lockedInAt)
+        : null;
+      const timeSpentMs = t.lockedInAt && !lockedInAt
+        ? t.timeSpentMs + (Date.now() - t.lockedInAt)
+        : (t.timeSpentMs ?? 0);
+      return {
+        ...t,
+        lockedInAt,
+        timeSpentMs,
+      };
+    });
   } catch {
     return [];
   }

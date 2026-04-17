@@ -109,7 +109,7 @@ export function TaskItem({
         "group bg-card border border-border rounded-xl px-4 py-4 transition-all animate-task-enter",
         "hover:border-border/80 hover:shadow-md",
         task.completed && "opacity-60",
-        task.lockedInAt && !task.completed && "border-emerald-500/50 bg-emerald-500/5 dark:bg-emerald-500/10 animate-glow-soft"
+        task.lockedInAt && !task.completed && "border-lockin/60 bg-lockin/5 dark:bg-lockin/10"
       )}
     >
       {editing ? (
@@ -126,6 +126,7 @@ export function TaskItem({
               }
               if (e.key === "Escape") handleCancelEdit();
             }}
+            aria-label="Task title"
             className="h-9 text-base font-semibold bg-secondary/50 border-primary/20 focus-visible:border-primary"
           />
           <DateTimePicker value={editDeadline} onChange={setEditDeadline} />
@@ -151,16 +152,16 @@ export function TaskItem({
       ) : (
         /* ── View mode ── */
         <div className="flex items-start gap-3">
-          {/* Checkbox */}
-          <button
+          {/* Checkbox */}            <button
             onClick={() => onComplete(task.id)}
             className={cn(
-              "mt-0.5 flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-300",
+              "mt-0.5 flex-shrink-0 w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all duration-300",
               task.completed
                 ? "bg-primary border-primary animate-check-pop"
                 : "border-primary/40 hover:border-primary hover:bg-primary/10 hover:scale-110 active:scale-90"
             )}
-            aria-label="Complete task"
+            aria-label={task.completed ? "Mark as incomplete" : "Complete task"}
+            aria-pressed={task.completed}
           >
             {task.completed && (
               <svg
@@ -189,8 +190,8 @@ export function TaskItem({
                 {task.title}
               </span>
               {task.lockedInAt && !task.completed && (
-                <span className="inline-flex items-center gap-1 text-[0.6rem] font-bold tracking-[0.12em] uppercase text-emerald-600 dark:text-emerald-400 font-[family-name:var(--font-display)]">
-                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="inline-flex items-center gap-1 text-[0.6rem] font-bold tracking-[0.12em] uppercase text-lockin font-[family-name:var(--font-display)]">
+                  <span className="size-1.5 rounded-full bg-lockin animate-pulse" />
                   locked in
                 </span>
               )}
@@ -259,6 +260,7 @@ export function TaskItem({
                     }
                   }}
                   placeholder="add subtask…"
+                  aria-label="Add subtask"
                   className="h-7 text-sm bg-secondary/30 border-border/50"
                 />
                 <Button
@@ -280,47 +282,52 @@ export function TaskItem({
                 {task.lockedInAt ? (
                   <Button
                     variant="ghost"
-                    size="icon-xs"
+                    size="icon-sm"
                     onClick={() => onLockOut(task.id)}
-                    className="text-emerald-500 hover:text-emerald-600 hover:bg-emerald-500/10"
-                    title="Stop focusing"
+                    className="text-lockin hover:text-lockin/80 hover:bg-lockin/10"
+                    aria-label="Stop focusing"
+                    aria-pressed="true"
                   >
-                    <Square className="size-3.5" />
+                    <Square className="size-4" />
                   </Button>
                 ) : (
                   <Button
                     variant="ghost"
-                    size="icon-xs"
+                    size="icon-sm"
                     onClick={() => onLockIn(task.id)}
-                    className="text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/10"
-                    title="Lock in"
+                    className="text-muted-foreground hover:text-lockin hover:bg-lockin/10"
+                    aria-label="Lock in on this task"
+                    aria-pressed="false"
                   >
-                    <Target className="size-3.5" />
+                    <Target className="size-4" />
                   </Button>
                 )}
                 <Button
                   variant="ghost"
-                  size="icon-xs"
+                  size="icon-sm"
                   onClick={() => setEditing(true)}
                   className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+                  aria-label="Edit task"
                 >
-                  <Pencil className="size-3.5" />
+                  <Pencil className="size-4" />
                 </Button>
                 <Button
                   variant="ghost"
-                  size="icon-xs"
+                  size="icon-sm"
                   disabled={index === 0}
                   onClick={() => onMove(task.id, -1)}
                   className="text-muted-foreground"
+                  aria-label="Move task up"
                 >
                   <ChevronUp className="size-4" />
                 </Button>
                 <Button
                   variant="ghost"
-                  size="icon-xs"
+                  size="icon-sm"
                   disabled={index >= total - 1}
                   onClick={() => onMove(task.id, 1)}
                   className="text-muted-foreground"
+                  aria-label="Move task down"
                 >
                   <ChevronDown className="size-4" />
                 </Button>
@@ -328,9 +335,10 @@ export function TaskItem({
             )}
             <Button
               variant="ghost"
-              size="icon-xs"
+              size="icon-sm"
               className="text-muted-foreground hover:text-overdue hover:bg-overdue-bg"
               onClick={() => onDelete(task.id)}
+              aria-label="Delete task"
             >
               <Trash2 className="size-4" />
             </Button>

@@ -39,8 +39,8 @@ export function HeroTimer({ tasks, mode }: HeroTimerProps) {
       <div
         className={`relative overflow-hidden rounded-2xl px-8 py-12 md:px-14 md:py-16 ${
           isIdle
-            ? "bg-gradient-to-br from-emerald-800/50 via-teal-800/40 to-emerald-900/30 dark:from-emerald-950/60 dark:via-teal-950/40 dark:to-emerald-950/30"
-            : "bg-gradient-to-br from-emerald-600/90 via-teal-700 to-cyan-800 dark:from-emerald-800/90 dark:via-teal-900 dark:to-cyan-950"
+            ? "bg-gradient-to-br from-lockin/40 via-lockin/25 to-lockin/15"
+            : "bg-gradient-to-br from-lockin/90 via-lockin-mid to-lockin-end"
         }`}
       >
         {/* Noise overlay */}
@@ -59,7 +59,7 @@ export function HeroTimer({ tasks, mode }: HeroTimerProps) {
           {isIdle && (
             <div className="inline-flex items-center gap-1.5 mb-3 px-3 py-0.5 rounded-full bg-white/10 text-[0.6rem] font-bold tracking-[0.16em] uppercase text-white/60 font-[family-name:var(--font-display)]">
               <Target className="size-3" />
-              lock-in mode
+              locked in
             </div>
           )}
 
@@ -72,7 +72,7 @@ export function HeroTimer({ tasks, mode }: HeroTimerProps) {
 
           <p
             className={`font-[family-name:var(--font-display)] text-lg md:text-xl font-medium tracking-tight ${
-              isIdle ? "text-white/40" : "text-white/90"
+              isIdle ? "text-white/60" : "text-white/90"
             }`}
           >
             {isIdle
@@ -83,14 +83,14 @@ export function HeroTimer({ tasks, mode }: HeroTimerProps) {
             {lockedTask?.deadline && (
               <span
                 className={`text-xs ${
-                  isPastDeadline ? "text-amber-300/70" : "text-white/45"
+                  isPastDeadline ? "text-amber-300/80" : "text-white/60"
                 }`}
               >
                 {isPastDeadline ? "past deadline" : formatDeadline(lockedTask.deadline)}
               </span>
             )}
             {!lockedTask?.deadline && !isIdle && (
-              <span className="text-xs text-white/30">no deadline</span>
+              <span className="text-xs text-white/55">no deadline</span>
             )}
           </div>
         </div>
@@ -166,14 +166,14 @@ export function HeroTimer({ tasks, mode }: HeroTimerProps) {
 
         <p
           className={`font-[family-name:var(--font-display)] text-lg md:text-xl font-medium tracking-tight ${
-            isCompleted ? "text-white/40" : "text-white/90"
+            isCompleted ? "text-white/60" : "text-white/90"
           }`}
         >
           {isCompleted
             ? "all done 🎉"
             : current?.title ?? "add your first task"}
         </p>
-        <p className="text-xs text-white/45 mt-1">
+        <p className="text-xs text-white/60 mt-1">
           {isCompleted ? "" : deadlineStr}
         </p>
       </div>

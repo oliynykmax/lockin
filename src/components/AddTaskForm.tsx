@@ -55,6 +55,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="what do you need to do?"
+        aria-label="Task title"
         className="h-11 text-base font-medium bg-secondary/50 border-primary/20 focus-visible:border-primary"
         autoFocus
       />
