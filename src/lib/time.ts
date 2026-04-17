@@ -45,6 +45,23 @@ export function formatTimerSmall(ms: number): string {
   return `${m}m ${s}s`;
 }
 
+export interface Elapsed {
+  days: string;
+  hours: string;
+  mins: string;
+  secs: string;
+}
+
+export function formatElapsed(ms: number): Elapsed {
+  const totalSec = Math.floor(Math.abs(ms) / 1000);
+  return {
+    days: String(Math.floor(totalSec / 86400)).padStart(2, "0"),
+    hours: String(Math.floor((totalSec % 86400) / 3600)).padStart(2, "0"),
+    mins: String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0"),
+    secs: String(totalSec % 60).padStart(2, "0"),
+  };
+}
+
 export function dateToLocalISO(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import type { Task } from "@/lib/types";
-import { formatCountdown, formatDeadline } from "@/lib/time";
+import { Target } from "lucide-react";
+import type { Task, TimerMode } from "@/lib/types";
+import { formatCountdown, formatDeadline, formatElapsed } from "@/lib/time";
 import type { Countdown } from "@/lib/time";
 
 interface HeroTimerProps {
   tasks: Task[];
+  mode: TimerMode;
 }
 
-export function HeroTimer({ tasks }: HeroTimerProps) {
+export function HeroTimer({ tasks, mode }: HeroTimerProps) {
   const [, setTick] = useState(0);
 
   useEffect(() => {
@@ -17,7 +19,83 @@ export function HeroTimer({ tasks }: HeroTimerProps) {
 
   const active = tasks.filter((t) => !t.completed);
   const withDeadline = active.filter((t) => t.deadline);
+  const lockedTask = active.find((t) => t.lockedInAt !== null) ?? null;
 
+  // ── Lock-in mode ──
+  if (mode === "lockin") {
+    const isIdle = !lockedTask;
+    const elapsed = lockedTask?.lockedInAt
+      ? formatElapsed(Date.now() - lockedTask.lockedInAt)
+      : { days: "00", hours: "00", mins: "00", secs: "00" };
+
+    const isPastDeadline =
+      lockedTask?.deadline &&
+      new Date(lockedTask.deadline).getTime() <= Date.now();
+
+    return (
+      <div
+        className={`relative overflow-hidden rounded-2xl px-8 py-12 md:px-14 md:py-16 ${
+          isIdle
+            ? "bg-gradient-to-br from-emerald-800/50 via-teal-800/40 to-emerald-900/30 dark:from-emerald-950/60 dark:via-teal-950/40 dark:to-emerald-950/30"
+            : "bg-gradient-to-br from-emerald-600/90 via-teal-700 to-cyan-800 dark:from-emerald-800/90 dark:via-teal-900 dark:to-cyan-950"
+        }`}
+      >
+        {/* Noise overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.05] mix-blend-overlay pointer-events-none"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
+            backgroundSize: "150px 150px",
+          }}
+        />
+        {/* Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_35%_25%,rgba(255,255,255,0.08),transparent_55%)] pointer-events-none" />
+
+        <div className="relative z-10 text-center">
+          {isIdle && (
+            <div className="inline-flex items-center gap-1.5 mb-3 px-3 py-0.5 rounded-full bg-white/10 text-[0.6rem] font-bold tracking-[0.16em] uppercase text-white/60 font-[family-name:var(--font-display)]">
+              <Target className="size-3" />
+              lock-in mode
+            </div>
+          )}
+
+          <div className="flex items-start justify-center gap-6 md:gap-10 mb-4">
+            <DigitGroup value={elapsed.days} label="days" pulse={false} />
+            <DigitGroup value={elapsed.hours} label="hrs" pulse={false} />
+            <DigitGroup value={elapsed.mins} label="min" pulse={false} />
+            <DigitGroup value={elapsed.secs} label="sec" pulse={false} />
+          </div>
+
+          <p
+            className={`font-[family-name:var(--font-display)] text-lg md:text-xl font-medium tracking-tight ${
+              isIdle ? "text-white/40" : "text-white/90"
+            }`}
+          >
+            {isIdle
+              ? "tap a task to lock in"
+              : lockedTask?.title ?? ""}
+          </p>
+          <div className="flex items-center justify-center gap-2 mt-1">
+            {lockedTask?.deadline && (
+              <span
+                className={`text-xs ${
+                  isPastDeadline ? "text-amber-300/70" : "text-white/45"
+                }`}
+              >
+                {isPastDeadline ? "past deadline" : formatDeadline(lockedTask.deadline)}
+              </span>
+            )}
+            {!lockedTask?.deadline && !isIdle && (
+              <span className="text-xs text-white/30">no deadline</span>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Countdown mode (original) ──
   let current: Task | undefined;
   let cd: Countdown;
   let deadlineStr = "";
@@ -28,9 +106,13 @@ export function HeroTimer({ tasks }: HeroTimerProps) {
     isCompleted = true;
     cd = { days: "00", hours: "00", mins: "00", secs: "00", overdue: false };
   } else {
-    current = withDeadline.length > 0
-      ? withDeadline.sort((a, b) => new Date(a.deadline!).getTime() - new Date(b.deadline!).getTime())[0]!
-      : active[0]!;
+    current =
+      withDeadline.length > 0
+        ? withDeadline.sort(
+            (a, b) =>
+              new Date(a.deadline!).getTime() - new Date(b.deadline!).getTime()
+          )[0]!
+        : active[0]!;
 
     if (current.deadline) {
       const remaining = new Date(current.deadline).getTime() - Date.now();
@@ -84,7 +166,9 @@ export function HeroTimer({ tasks }: HeroTimerProps) {
             isCompleted ? "text-white/40" : "text-white/90"
           }`}
         >
-          {isCompleted ? "all done 🎉" : current?.title ?? "add your first task"}
+          {isCompleted
+            ? "all done 🎉"
+            : current?.title ?? "add your first task"}
         </p>
         <p className="text-xs text-white/45 mt-1">
           {isCompleted ? "" : deadlineStr}
@@ -118,4 +202,3 @@ function DigitGroup({
     </div>
   );
 }
-

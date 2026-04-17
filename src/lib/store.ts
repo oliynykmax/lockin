@@ -2,6 +2,7 @@ import type { Task } from "./types";
 
 const STORE_KEY = "lockin_tasks";
 const THEME_KEY = "lockin_theme";
+const MODE_KEY = "lockin_mode";
 
 export function uid(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -14,7 +15,13 @@ export function saveTasks(tasks: Task[]): void {
 export function loadTasks(): Task[] {
   try {
     const raw = localStorage.getItem(STORE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const tasks: Task[] = JSON.parse(raw);
+    // Migration: ensure lockedInAt exists on all tasks
+    return tasks.map((t) => ({
+      ...t,
+      lockedInAt: t.lockedInAt ?? null,
+    }));
   } catch {
     return [];
   }
@@ -27,4 +34,13 @@ export function loadTheme(): "light" | "dark" {
 
 export function saveTheme(theme: "light" | "dark"): void {
   localStorage.setItem(THEME_KEY, theme);
+}
+
+export function loadMode(): "countdown" | "lockin" {
+  const saved = localStorage.getItem(MODE_KEY);
+  return saved === "lockin" ? "lockin" : "countdown";
+}
+
+export function saveMode(mode: "countdown" | "lockin"): void {
+  localStorage.setItem(MODE_KEY, mode);
 }

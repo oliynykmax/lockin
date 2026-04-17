@@ -10,4 +10,7 @@ export interface Task {
   completed: boolean;
   subtasks: Subtask[];
   createdAt: number;
+  lockedInAt: number | null;
 }
+
+export type TimerMode = "countdown" | "lockin";

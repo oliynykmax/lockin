@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ChevronUp, ChevronDown, Trash2, Plus, X, Pencil, Check } from "lucide-react";
+import { ChevronUp, ChevronDown, Trash2, Plus, X, Pencil, Check, Target, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -20,6 +20,8 @@ interface TaskItemProps {
   onAddSubtask: (taskId: string, text: string) => void;
   onToggleSubtask: (taskId: string, subIndex: number) => void;
   onDeleteSubtask: (taskId: string, subIndex: number) => void;
+  onLockIn: (id: string) => void;
+  onLockOut: (id: string) => void;
 }
 
 export function TaskItem({
@@ -33,6 +35,8 @@ export function TaskItem({
   onAddSubtask,
   onToggleSubtask,
   onDeleteSubtask,
+  onLockIn,
+  onLockOut,
 }: TaskItemProps) {
   const [, setTick] = useState(0);
   const [editing, setEditing] = useState(false);
@@ -104,7 +108,8 @@ export function TaskItem({
       className={cn(
         "group bg-card border border-border rounded-xl px-4 py-4 transition-all animate-task-enter",
         "hover:border-border/80 hover:shadow-md",
-        task.completed && "opacity-60"
+        task.completed && "opacity-60",
+        task.lockedInAt && !task.completed && "border-emerald-500/50 bg-emerald-500/5 dark:bg-emerald-500/10 animate-glow-soft"
       )}
     >
       {editing ? (
@@ -183,6 +188,12 @@ export function TaskItem({
               >
                 {task.title}
               </span>
+              {task.lockedInAt && !task.completed && (
+                <span className="inline-flex items-center gap-1 text-[0.6rem] font-bold tracking-[0.12em] uppercase text-emerald-600 dark:text-emerald-400 font-[family-name:var(--font-display)]">
+                  <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  locked in
+                </span>
+              )}
               <span
                 className={cn(
                   "font-[family-name:var(--font-display)] text-sm font-medium tabular-nums tracking-wide",
@@ -266,6 +277,27 @@ export function TaskItem({
           <div className="flex items-center gap-0.5 flex-shrink-0 mt-0.5">
             {!task.completed && (
               <>
+                {task.lockedInAt ? (
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    onClick={() => onLockOut(task.id)}
+                    className="text-emerald-500 hover:text-emerald-600 hover:bg-emerald-500/10"
+                    title="Stop focusing"
+                  >
+                    <Square className="size-3.5" />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    onClick={() => onLockIn(task.id)}
+                    className="text-muted-foreground hover:text-emerald-500 hover:bg-emerald-500/10"
+                    title="Lock in"
+                  >
+                    <Target className="size-3.5" />
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="icon-xs"

@@ -18,13 +18,16 @@ export function useTasks() {
       completed: false,
       subtasks: [],
       createdAt: Date.now(),
+      lockedInAt: null,
     };
     setTasks((prev) => [...prev, task]);
   }, []);
 
   const completeTask = useCallback((id: string) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+      prev.map((t) =>
+        t.id === id ? { ...t, completed: !t.completed, lockedInAt: null } : t
+      )
     );
   }, []);
 
@@ -82,10 +85,26 @@ export function useTasks() {
   const deleteSubtask = useCallback((taskId: string, subIndex: number) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === taskId
-          ? { ...t, subtasks: t.subtasks.filter((_, i) => i !== subIndex) }
-          : t
+        t.id === taskId ? { ...t, subtasks: t.subtasks.filter((_, i) => i !== subIndex) } : t
       )
+    );
+  }, []);
+
+  const lockIn = useCallback((id: string) => {
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.completed) return t;
+        if (t.id === id) return { ...t, lockedInAt: Date.now() };
+        // Unlock any other task that was locked in
+        if (t.lockedInAt !== null) return { ...t, lockedInAt: null };
+        return t;
+      })
+    );
+  }, []);
+
+  const lockOut = useCallback((id: string) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, lockedInAt: null } : t))
     );
   }, []);
 
@@ -99,5 +118,7 @@ export function useTasks() {
     addSubtask,
     toggleSubtask,
     deleteSubtask,
+    lockIn,
+    lockOut,
   };
 }

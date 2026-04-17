@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { loadTheme, saveTheme } from "@/lib/store";
+import { loadTheme, saveTheme, loadMode, saveMode } from "@/lib/store";
+import type { TimerMode } from "@/lib/types";
 
 export function useTheme() {
   const [theme, setTheme] = useState<"light" | "dark">(() => loadTheme());
+  const [mode, setMode] = useState<TimerMode>(() => loadMode());
 
   useEffect(() => {
     const root = document.documentElement;
@@ -14,9 +16,17 @@ export function useTheme() {
     saveTheme(theme);
   }, [theme]);
 
+  useEffect(() => {
+    saveMode(mode);
+  }, [mode]);
+
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   }, []);
 
-  return { theme, toggleTheme };
+  const setTimerMode = useCallback((m: TimerMode) => {
+    setMode(m);
+  }, []);
+
+  return { theme, toggleTheme, mode, setTimerMode };
 }
