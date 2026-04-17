@@ -107,7 +107,7 @@ function DigitGroup({
   pulse: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center min-w-[56px] md:min-w-[80px]">
+    <div className="flex flex-col items-center w-[56px] md:w-[80px]">
       <span
         className={`font-[family-name:var(--font-display)] text-[2.2rem] md:text-[4.5rem] font-bold leading-none tracking-tighter text-white tabular-nums ${
           pulse ? "animate-pulse-urgent" : ""
