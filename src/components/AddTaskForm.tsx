@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DateTimePicker } from "@/components/DateTimePicker";
+import { dateToLocalISO } from "@/lib/time";
 
 interface AddTaskFormProps {
   onAdd: (title: string, deadline: string | null) => void;
@@ -17,11 +18,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
     (e: React.FormEvent) => {
       e.preventDefault();
       if (!title.trim()) return;
-      // Use local time string to avoid UTC shift
-      const pad = (n: number) => String(n).padStart(2, "0");
-      const deadlineStr = deadline
-        ? `${deadline.getFullYear()}-${pad(deadline.getMonth() + 1)}-${pad(deadline.getDate())}T${pad(deadline.getHours())}:${pad(deadline.getMinutes())}`
-        : null;
+      const deadlineStr = deadline ? dateToLocalISO(deadline) : null;
       onAdd(title, deadlineStr);
       setTitle("");
       setDeadline(undefined);

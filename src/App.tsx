@@ -10,6 +10,7 @@ export default function App() {
   const {
     tasks,
     addTask,
+    editTask,
     completeTask,
     deleteTask,
     moveTask,
@@ -66,6 +67,7 @@ export default function App() {
                 index={i}
                 total={activeTasks.length}
                 onComplete={completeTask}
+                onEdit={editTask}
                 onDelete={deleteTask}
                 onMove={moveTask}
                 onAddSubtask={addSubtask}
@@ -80,6 +82,7 @@ export default function App() {
                 index={-1}
                 total={-1}
                 onComplete={completeTask}
+                onEdit={editTask}
                 onDelete={deleteTask}
                 onMove={moveTask}
                 onAddSubtask={addSubtask}

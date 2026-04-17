@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon, Clock, X } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -130,6 +130,7 @@ export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
               selected={selectedDate}
               onSelect={handleDateSelect}
               defaultMonth={selectedDate ?? new Date()}
+              disabled={{ before: new Date(new Date().setHours(0, 0, 0, 0)) }}
             />
           </PopoverContent>
         </Popover>
@@ -165,12 +166,29 @@ export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
         </div>
       </div>
 
-      {/* Selected deadline display */}
-      {selectedDate && (
+      {/* Selected deadline display — always rendered to prevent layout shift */}
+      <div className="flex items-center justify-between min-h-[1.25rem]">
         <p className="text-xs text-muted-foreground">
-          deadline: {format(selectedDate, "MMM d, yyyy · h:mm a")}
+          {selectedDate ? `deadline: ${format(selectedDate, "MMM d, yyyy · h:mm a")}` : "\u00A0"}
         </p>
-      )}
+        {selectedDate && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="xs"
+            className="text-muted-foreground hover:text-overdue h-5 px-1.5"
+            onClick={() => {
+              setSelectedDate(undefined);
+              setHours("23");
+              setMinutes("59");
+              onChange(undefined);
+            }}
+          >
+            <X className="size-3" />
+            clear
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

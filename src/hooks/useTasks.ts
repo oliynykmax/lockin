@@ -28,6 +28,12 @@ export function useTasks() {
     );
   }, []);
 
+  const editTask = useCallback((id: string, updates: Partial<Pick<Task, "title" | "deadline">>) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
+    );
+  }, []);
+
   const deleteTask = useCallback((id: string) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }, []);
@@ -86,6 +92,7 @@ export function useTasks() {
   return {
     tasks,
     addTask,
+    editTask,
     completeTask,
     deleteTask,
     moveTask,

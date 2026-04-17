@@ -45,6 +45,11 @@ export function formatTimerSmall(ms: number): string {
   return `${m}m ${s}s`;
 }
 
+export function dateToLocalISO(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 export function formatDeadline(iso: string | null): string {
   if (!iso) return "";
   const d = new Date(iso);
