@@ -122,7 +122,7 @@ export default function App() {
           </div>
 
           {/* Task List — scrollable area */}
-          <div className="flex-1 overflow-y-auto space-y-2.5 min-h-0 py-1">
+          <div className="task-scroll flex-1 overflow-y-auto space-y-2.5 min-h-0 py-1 pr-2">
             {activeTasks.map((task, i) => (
               <TaskItem
                 key={task.id}
