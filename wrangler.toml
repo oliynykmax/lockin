@@ -5,6 +5,8 @@ compatibility_flags = ["nodejs_compat_v2"]
 
 [vars]
 BETTER_AUTH_URL = "https://lockin-dob.pages.dev"
+GOOGLE_CLIENT_ID = "3922850272-233gqfi6br9lrpo9ipepguuv389332o3.apps.googleusercontent.com"
+GITHUB_CLIENT_ID = "Ov23liTULHGuYuhWk41e"
 
 [[d1_databases]]
 binding = "DB"
