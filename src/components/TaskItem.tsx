@@ -197,7 +197,7 @@ export function TaskItem({
               )}
               <span
                 className={cn(
-                  "font-[family-name:var(--font-display)] text-sm font-medium tabular-nums tracking-wide",
+                  "inline-block min-w-[16ch] whitespace-nowrap text-right font-[family-name:var(--font-display)] text-sm font-medium tabular-nums tracking-wide",
                   isOverdue && "text-overdue",
                   isNoDeadline && "text-muted-foreground font-normal",
                   !isOverdue && !isNoDeadline && !task.completed && "text-primary",
