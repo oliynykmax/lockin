@@ -1,0 +1,9 @@
+name = "lockin"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat_v2"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lockin-db"
+database_id = "4bc8d331-2e3c-4454-859b-a6e764722537"
+preview_database_id = "DB"

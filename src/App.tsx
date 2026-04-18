@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { Sun, Moon, Target, Hourglass } from "lucide-react";
+import { AuthButton } from "@/components/AuthButton";
 import { Button } from "@/components/ui/button";
 import { HeroTimer } from "@/components/HeroTimer";
 import { AddTaskForm } from "@/components/AddTaskForm";
@@ -88,6 +89,7 @@ export default function App() {
               <span className="hidden sm:inline">lock-in</span>
             </button>
           </div>
+          <AuthButton />
           {/* Theme toggle */}
           <Button
             variant="outline"

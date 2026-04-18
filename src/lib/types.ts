@@ -12,6 +12,7 @@ export interface Task {
   createdAt: number;
   lockedInAt: number | null;
   timeSpentMs: number;
+  updatedAt: number;
 }
 
 export type TimerMode = "countdown" | "lockin";

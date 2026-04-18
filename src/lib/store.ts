@@ -8,6 +8,10 @@ export function uid(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+export function now(): number {
+  return Date.now();
+}
+
 export function saveTasks(tasks: Task[]): void {
   localStorage.setItem(STORE_KEY, JSON.stringify(tasks));
 }
@@ -30,6 +34,7 @@ export function loadTasks(): Task[] {
         ...t,
         lockedInAt,
         timeSpentMs,
+        updatedAt: t.updatedAt ?? t.createdAt,
       };
     });
   } catch {
