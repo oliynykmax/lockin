@@ -151,8 +151,9 @@
     font-feature-settings: "ss01" 1, "cv08" 1, "zero" 1;
   }
 
-  .font-mono-mode .font-keep-display {
-    font-family: var(--font-display);
+  .font-mono-mode {
+    --font-body: "JetBrains Mono", monospace;
+    --font-display: "JetBrains Mono", monospace;
   }
 
   .font-mono-mode .mono-chip {

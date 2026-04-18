@@ -54,7 +54,7 @@ export default function App() {
     <div className="max-w-[1080px] mx-auto px-4 md:px-8 h-dvh flex flex-col overflow-hidden">
       {/* Header */}
       <header className="flex items-center justify-between py-6 pb-4 shrink-0">
-        <h1 className="font-keep-display font-[family-name:var(--font-display)] text-2xl md:text-[1.9rem] font-bold tracking-tight text-foreground">
+        <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-[1.9rem] font-bold tracking-tight text-foreground">
           lockin<span className="text-primary">.</span>
         </h1>
         <div className="flex items-center gap-2">
