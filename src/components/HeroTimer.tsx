@@ -7,9 +7,10 @@ import type { Countdown } from "@/lib/time";
 interface HeroTimerProps {
   tasks: Task[];
   mode: TimerMode;
+  showLockInTip?: boolean;
 }
 
-export function HeroTimer({ tasks, mode }: HeroTimerProps) {
+export function HeroTimer({ tasks, mode, showLockInTip = false }: HeroTimerProps) {
   const [, setTick] = useState(0);
 
   useEffect(() => {
@@ -70,15 +71,19 @@ export function HeroTimer({ tasks, mode }: HeroTimerProps) {
             <DigitGroup value={elapsed.secs} label="sec" pulse={false} />
           </div>
 
-          <p
-            className={`font-[family-name:var(--font-display)] text-lg md:text-xl font-medium tracking-tight ${
-              isIdle ? "text-white/60" : "text-white/90"
-            }`}
-          >
-            {isIdle
-              ? "tap a task to lock in"
-              : lockedTask?.title ?? ""}
-          </p>
+          {!isIdle && (
+            <p className="font-[family-name:var(--font-display)] text-lg md:text-xl font-medium tracking-tight text-white/90">
+              {lockedTask?.title ?? ""}
+            </p>
+          )}
+          {showLockInTip && isIdle && active.length > 0 && (
+            <div className="mt-4 flex justify-center">
+              <div className="relative inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/12 px-3 py-1.5 text-xs font-medium text-white/90 shadow-sm">
+                <Target className="size-3.5" />
+                tap the target button on a task
+              </div>
+            </div>
+          )}
           <div className="flex items-center justify-center gap-2 mt-1">
             {lockedTask?.deadline && (
               <span

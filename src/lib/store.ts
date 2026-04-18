@@ -4,6 +4,7 @@ const STORE_KEY = "lockin_tasks";
 const THEME_KEY = "lockin_theme";
 const MODE_KEY = "lockin_mode";
 const FONT_STYLE_KEY = "lockin_font_style";
+const LOCKIN_TIP_KEY = "lockin_lockin_tip_seen";
 
 export function uid(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -68,4 +69,16 @@ export function loadFontStyle(): "default" | "mono" {
 
 export function saveFontStyle(style: "default" | "mono"): void {
   localStorage.setItem(FONT_STYLE_KEY, style);
+}
+
+function getLockInTipKey(userId: string | null): string {
+  return userId ? `${LOCKIN_TIP_KEY}:${userId}` : LOCKIN_TIP_KEY;
+}
+
+export function loadLockInTipSeen(userId: string | null): boolean {
+  return localStorage.getItem(getLockInTipKey(userId)) === "1";
+}
+
+export function saveLockInTipSeen(userId: string | null): void {
+  localStorage.setItem(getLockInTipKey(userId), "1");
 }

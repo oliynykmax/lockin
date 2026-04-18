@@ -26,7 +26,7 @@ export function AuthButton() {
 
   if (isPending) {
     return (
-      <div className="h-9 w-20 animate-pulse rounded-full bg-muted" />
+      <div className="h-8 w-24 animate-pulse rounded-lg bg-muted" />
     );
   }
 
@@ -35,14 +35,14 @@ export function AuthButton() {
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen(!open)}
-          className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium font-[family-name:var(--font-display)] tracking-wide bg-card border border-border hover:bg-primary/10 hover:text-primary hover:border-border/80 transition-all"
+          className="flex h-8 items-center gap-1.5 rounded-lg border border-border/70 bg-card px-2.5 text-xs font-medium tracking-wide text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all"
         >
           <User className="size-3.5" />
-          sign in
+          account
           <ChevronDown className="size-3 opacity-60" />
         </button>
         {open && (
-          <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-border bg-card shadow-lg p-1.5 z-50 animate-fade-in">
+          <div className="absolute right-0 top-full z-50 mt-1.5 w-52 animate-fade-in rounded-xl border border-border bg-card p-1.5 shadow-lg">
             <button
               onClick={() => {
                 setOpen(false);
@@ -81,7 +81,7 @@ export function AuthButton() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded-full pl-1 pr-2.5 py-0.5 text-xs font-medium bg-card border border-border hover:bg-primary/10 hover:border-border/80 transition-all"
+        className="flex h-8 items-center gap-2 rounded-lg border border-border/70 bg-card pl-1 pr-2 text-xs font-medium text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all"
       >
         {user.image ? (
           <img src={user.image} alt="" className="size-7 rounded-full object-cover" />
@@ -94,7 +94,7 @@ export function AuthButton() {
         <ChevronDown className="size-3 opacity-60" />
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border border-border bg-card shadow-lg p-1.5 z-50 animate-fade-in">
+        <div className="absolute right-0 top-full z-50 mt-1.5 w-52 animate-fade-in rounded-xl border border-border bg-card p-1.5 shadow-lg">
           <div className="px-3 py-2 text-xs text-muted-foreground truncate border-b border-border mb-1">
             {user.email}
           </div>
