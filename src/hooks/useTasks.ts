@@ -17,6 +17,7 @@ export function useTasks() {
   const userId = session?.user?.id ?? null;
   const [tasks, setTasks] = useState<Task[]>(loadTasks);
   const syncedRef = useRef(false);
+  const hydrationDoneRef = useRef(false);
   const skipSyncRef = useRef(false);
   const prevUserIdRef = useRef<string | null>(null);
 
@@ -26,10 +27,12 @@ export function useTasks() {
       // User signed out — reload from localStorage (which may have pre-auth local tasks)
       setTasks(loadTasks());
       syncedRef.current = false;
+      hydrationDoneRef.current = false;
     } else if (prevUserIdRef.current && userId && prevUserIdRef.current !== userId) {
       // User switched accounts — load fresh
       setTasks([]);
       syncedRef.current = false;
+      hydrationDoneRef.current = false;
     }
     prevUserIdRef.current = userId;
   }, [userId]);
@@ -38,6 +41,7 @@ export function useTasks() {
   useEffect(() => {
     if (!userId) {
       syncedRef.current = false;
+      hydrationDoneRef.current = false;
       return;
     }
     if (syncedRef.current) return;
@@ -45,22 +49,37 @@ export function useTasks() {
 
     (async () => {
       try {
+        const localTasks = loadTasks();
         const serverTasks: Task[] = await apiFetch("/tasks");
-        setTasks((local) => {
-          const serverMap = new Map(serverTasks.map((t) => [t.id, t]));
-          const merged = local.map((t) => {
-            const server = serverMap.get(t.id);
-            if (!server) return t;
-            return (server.updatedAt ?? 0) >= (t.updatedAt ?? 0) ? server : t;
-          });
-          const localIds = new Set(local.map((t) => t.id));
-          for (const st of serverTasks) {
-            if (!localIds.has(st.id)) merged.push(st);
+
+        if (localTasks.length === 0) {
+          setTasks(serverTasks);
+          return;
+        }
+
+        const mergedMap = new Map(serverTasks.map((t) => [t.id, t]));
+        for (const local of localTasks) {
+          const server = mergedMap.get(local.id);
+          if (!server || (local.updatedAt ?? 0) > (server.updatedAt ?? 0)) {
+            mergedMap.set(local.id, local);
           }
-          return merged;
+        }
+
+        const mergedTasks = Array.from(mergedMap.values()).sort(
+          (a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0)
+        );
+
+        const reconciled: Task[] = await apiFetch("/tasks", {
+          method: "PUT",
+          body: JSON.stringify({ tasks: mergedTasks }),
         });
+
+        setTasks(reconciled);
+        saveTasks([]);
       } catch (e) {
         console.error("Failed to load tasks from server:", e);
+      } finally {
+        hydrationDoneRef.current = true;
       }
     })();
   }, [userId]);
@@ -71,9 +90,13 @@ export function useTasks() {
   tasksRef.current = tasks;
 
   useEffect(() => {
-    saveTasks(tasks);
+    if (!userId) {
+      saveTasks(tasks);
+      return;
+    }
 
-    if (!userId) return;
+    if (!hydrationDoneRef.current) return;
+
     // Skip sync after server response to avoid infinite loop
     if (skipSyncRef.current) {
       skipSyncRef.current = false;

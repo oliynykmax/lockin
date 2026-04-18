@@ -28,21 +28,12 @@ export function formatCountdown(ms: number): Countdown {
 }
 
 export function formatTimerSmall(ms: number): string {
-  if (ms <= 0) {
-    const overSec = Math.floor(Math.abs(ms) / 1000);
-    const h = Math.floor(overSec / 3600);
-    const m = Math.floor((overSec % 3600) / 60);
-    const s = overSec % 60;
-    return `overdue ${h > 0 ? h + "h " : ""}${m}m ${s}s`;
-  }
-  const totalSec = Math.floor(ms / 1000);
-  const days = Math.floor(totalSec / 86400);
-  const h = Math.floor((totalSec % 86400) / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
-  if (days > 0) return `${days}d ${h}h ${m}m ${s}s`;
-  if (h > 0) return `${h}h ${m}m ${s}s`;
-  return `${m}m ${s}s`;
+  const totalSec = Math.floor(Math.abs(ms) / 1000);
+  const days = String(Math.floor(totalSec / 86400)).padStart(2, "0");
+  const h = String(Math.floor((totalSec % 86400) / 3600)).padStart(2, "0");
+  const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+  const s = String(totalSec % 60).padStart(2, "0");
+  return `${days}d ${h}h ${m}m ${s}s`;
 }
 
 export interface Elapsed {
