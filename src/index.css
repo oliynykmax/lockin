@@ -41,6 +41,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --font-display: "Clash Display", sans-serif;
   --font-body: "Satoshi", sans-serif;
+  --font-mono-alt: "JetBrains Mono", monospace;
   --animate-fade-in: fade-in 0.3s ease-out;
   --animate-slide-down: slide-down 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --animate-task-enter: task-enter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -143,6 +144,22 @@
 
   body {
     @apply bg-background text-foreground font-[family-name:var(--font-body)] antialiased;
+  }
+
+  .font-mono-mode body {
+    font-family: var(--font-mono-alt);
+    font-feature-settings: "ss01" 1, "cv08" 1, "zero" 1;
+  }
+
+  .font-mono-mode .font-keep-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono-mode .mono-chip {
+    background: color-mix(in oklab, var(--primary) 14%, var(--card));
+    border-color: color-mix(in oklab, var(--primary) 36%, var(--border));
+    color: color-mix(in oklab, var(--primary) 70%, var(--foreground));
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 20%, transparent);
   }
 }
 

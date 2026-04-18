@@ -3,6 +3,7 @@ import type { Task } from "./types";
 const STORE_KEY = "lockin_tasks";
 const THEME_KEY = "lockin_theme";
 const MODE_KEY = "lockin_mode";
+const FONT_STYLE_KEY = "lockin_font_style";
 
 export function uid(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -58,4 +59,13 @@ export function loadMode(): "countdown" | "lockin" {
 
 export function saveMode(mode: "countdown" | "lockin"): void {
   localStorage.setItem(MODE_KEY, mode);
+}
+
+export function loadFontStyle(): "default" | "mono" {
+  const saved = localStorage.getItem(FONT_STYLE_KEY);
+  return saved === "mono" ? "mono" : "default";
+}
+
+export function saveFontStyle(style: "default" | "mono"): void {
+  localStorage.setItem(FONT_STYLE_KEY, style);
 }

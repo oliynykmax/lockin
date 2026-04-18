@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Sun, Moon, Target, Hourglass } from "lucide-react";
+import { Sun, Moon, Target, Hourglass, Type } from "lucide-react";
 import { AuthButton } from "@/components/AuthButton";
 import { Button } from "@/components/ui/button";
 import { HeroTimer } from "@/components/HeroTimer";
@@ -25,7 +25,7 @@ export default function App() {
     lockOut,
   } = useTasks();
 
-  const { theme, toggleTheme, mode, setTimerMode: _setTimerMode } = useTheme();
+  const { theme, toggleTheme, mode, setTimerMode: _setTimerMode, fontStyle, toggleFontStyle } = useTheme();
 
   // When manually switching to countdown, clear any active lock-in
   const setTimerMode = useCallback((m: TimerMode) => {
@@ -54,7 +54,7 @@ export default function App() {
     <div className="max-w-[1080px] mx-auto px-4 md:px-8 h-dvh flex flex-col overflow-hidden">
       {/* Header */}
       <header className="flex items-center justify-between py-6 pb-4 shrink-0">
-        <h1 className="font-[family-name:var(--font-display)] text-2xl md:text-[1.9rem] font-bold tracking-tight text-foreground">
+        <h1 className="font-keep-display font-[family-name:var(--font-display)] text-2xl md:text-[1.9rem] font-bold tracking-tight text-foreground">
           lockin<span className="text-primary">.</span>
         </h1>
         <div className="flex items-center gap-2">
@@ -90,6 +90,22 @@ export default function App() {
             </button>
           </div>
           <AuthButton />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleFontStyle}
+            className={cn(
+              "rounded-full size-9 border-border bg-card transition-all",
+              fontStyle === "mono"
+                ? "mono-chip text-primary border-primary/40 bg-primary/10 shadow-[0_0_0_1px_hsl(from_var(--primary)_h_s_l_/_0.08)]"
+                : "text-muted-foreground hover:bg-primary/10 hover:text-primary hover:border-border/80"
+            )}
+            aria-label="Toggle monospace style"
+            aria-pressed={fontStyle === "mono"}
+            title={fontStyle === "mono" ? "Mono mode on" : "Mono mode"}
+          >
+            <Type className="size-4" />
+          </Button>
           {/* Theme toggle */}
           <Button
             variant="outline"
