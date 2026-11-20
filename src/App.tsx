@@ -38,28 +38,37 @@ export default function App() {
   }, [userId]);
 
   // When manually switching to countdown, clear any active lock-in
-  const setTimerMode = useCallback((m: TimerMode) => {
-    if (m === "countdown") {
-      const locked = tasks.find((t) => t.lockedInAt && !t.completed);
-      if (locked) lockOut(locked.id);
-    }
-    _setTimerMode(m);
-  }, [tasks, lockOut, _setTimerMode]);
+  const setTimerMode = useCallback(
+    (m: TimerMode) => {
+      if (m === "countdown") {
+        const locked = tasks.find((t) => t.lockedInAt && !t.completed);
+        if (locked) lockOut(locked.id);
+      }
+      _setTimerMode(m);
+    },
+    [tasks, lockOut, _setTimerMode],
+  );
 
   // Wrapping lockIn to also switch to lock-in mode automatically
-  const handleLockIn = useCallback((id: string) => {
-    lockIn(id);
-    setTimerMode("lockin");
-    if (showLockInTip) {
-      saveLockInTipSeen(userId);
-      setShowLockInTip(false);
-    }
-  }, [lockIn, setTimerMode, showLockInTip, userId]);
+  const handleLockIn = useCallback(
+    (id: string) => {
+      lockIn(id);
+      setTimerMode("lockin");
+      if (showLockInTip) {
+        saveLockInTipSeen(userId);
+        setShowLockInTip(false);
+      }
+    },
+    [lockIn, setTimerMode, showLockInTip, userId],
+  );
 
   // Switch back to countdown when unlocking (setTimerMode clears the locked task)
-  const handleLockOut = useCallback((_id: string) => {
-    setTimerMode("countdown");
-  }, [setTimerMode]);
+  const handleLockOut = useCallback(
+    (_id: string) => {
+      setTimerMode("countdown");
+    },
+    [setTimerMode],
+  );
 
   const activeTasks = tasks.filter((t) => !t.completed);
   const completedTasks = tasks.filter((t) => t.completed);
@@ -84,7 +93,7 @@ export default function App() {
                     "flex h-8 items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-semibold tracking-wide transition-all",
                     mode === "countdown"
                       ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                   aria-pressed={mode === "countdown"}
                   aria-label="Countdown mode"
@@ -98,7 +107,7 @@ export default function App() {
                     "flex h-8 items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-semibold tracking-wide transition-all",
                     mode === "lockin"
                       ? "bg-lockin text-lockin-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                   aria-pressed={mode === "lockin"}
                   aria-label="Lock-in mode"
@@ -117,9 +126,7 @@ export default function App() {
                 onClick={toggleFontStyle}
                 className={cn(
                   "rounded-lg text-muted-foreground",
-                  fontStyle === "mono"
-                    ? "mono-chip text-primary"
-                    : "hover:bg-primary/10 hover:text-primary"
+                  fontStyle === "mono" ? "mono-chip text-primary" : "hover:bg-primary/10 hover:text-primary",
                 )}
                 aria-label="Toggle monospace style"
                 aria-pressed={fontStyle === "mono"}
@@ -134,11 +141,7 @@ export default function App() {
                 className="rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary"
                 aria-label="Toggle dark mode"
               >
-                {theme === "dark" ? (
-                  <Sun className="size-4" />
-                ) : (
-                  <Moon className="size-4" />
-                )}
+                {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
               </Button>
             </div>
           </div>
@@ -217,9 +220,7 @@ export default function App() {
                 <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-muted-foreground mb-1">
                   no tasks yet
                 </p>
-                <p className="text-sm text-muted-foreground/60">
-                  add one above to start lockin in
-                </p>
+                <p className="text-sm text-muted-foreground/60">add one above to start lockin in</p>
               </div>
             )}
           </div>

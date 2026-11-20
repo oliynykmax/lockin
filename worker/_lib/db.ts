@@ -92,4 +92,3 @@ export function taskRowToClient(row: TaskRow) {
     updatedAt: row.updated_at,
   };
 }
-

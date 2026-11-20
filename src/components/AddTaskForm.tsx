@@ -24,7 +24,7 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
       setDeadline(undefined);
       setShowForm(false);
     },
-    [title, deadline, onAdd]
+    [title, deadline, onAdd],
   );
 
   const handleCancel = useCallback(() => {
@@ -63,7 +63,10 @@ export function AddTaskForm({ onAdd }: AddTaskFormProps) {
       <DateTimePicker value={deadline} onChange={setDeadline} />
 
       <div className="flex gap-2 justify-end pt-1">
-        <Button type="submit" className="rounded-full font-[family-name:var(--font-display)] font-semibold shadow-md shadow-primary/20">
+        <Button
+          type="submit"
+          className="rounded-full font-[family-name:var(--font-display)] font-semibold shadow-md shadow-primary/20"
+        >
           add task
         </Button>
         <Button type="button" variant="ghost" onClick={handleCancel} className="rounded-full">

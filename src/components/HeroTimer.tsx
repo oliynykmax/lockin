@@ -25,16 +25,10 @@ export function HeroTimer({ tasks, mode, showLockInTip = false }: HeroTimerProps
   // ── Lock-in mode ──
   if (mode === "lockin") {
     const isIdle = !lockedTask;
-    const totalMs = lockedTask?.lockedInAt
-      ? lockedTask.timeSpentMs + (Date.now() - lockedTask.lockedInAt)
-      : 0;
-    const elapsed = totalMs > 0
-      ? formatElapsed(totalMs)
-      : { days: "00", hours: "00", mins: "00", secs: "00" };
+    const totalMs = lockedTask?.lockedInAt ? lockedTask.timeSpentMs + (Date.now() - lockedTask.lockedInAt) : 0;
+    const elapsed = totalMs > 0 ? formatElapsed(totalMs) : { days: "00", hours: "00", mins: "00", secs: "00" };
 
-    const isPastDeadline =
-      lockedTask?.deadline &&
-      new Date(lockedTask.deadline).getTime() <= Date.now();
+    const isPastDeadline = lockedTask?.deadline && new Date(lockedTask.deadline).getTime() <= Date.now();
 
     return (
       <div
@@ -86,17 +80,11 @@ export function HeroTimer({ tasks, mode, showLockInTip = false }: HeroTimerProps
           )}
           <div className="flex items-center justify-center gap-2 mt-1">
             {lockedTask?.deadline && (
-              <span
-                className={`text-xs ${
-                  isPastDeadline ? "text-amber-300/80" : "text-white/60"
-                }`}
-              >
+              <span className={`text-xs ${isPastDeadline ? "text-amber-300/80" : "text-white/60"}`}>
                 {isPastDeadline ? "past deadline" : formatDeadline(lockedTask.deadline)}
               </span>
             )}
-            {!lockedTask?.deadline && !isIdle && (
-              <span className="text-xs text-white/55">no deadline</span>
-            )}
+            {!lockedTask?.deadline && !isIdle && <span className="text-xs text-white/55">no deadline</span>}
           </div>
         </div>
       </div>
@@ -116,10 +104,7 @@ export function HeroTimer({ tasks, mode, showLockInTip = false }: HeroTimerProps
   } else {
     current =
       withDeadline.length > 0
-        ? withDeadline.sort(
-            (a, b) =>
-              new Date(a.deadline!).getTime() - new Date(b.deadline!).getTime()
-          )[0]!
+        ? withDeadline.sort((a, b) => new Date(a.deadline!).getTime() - new Date(b.deadline!).getTime())[0]!
         : active[0]!;
 
     if (current.deadline) {
@@ -174,27 +159,15 @@ export function HeroTimer({ tasks, mode, showLockInTip = false }: HeroTimerProps
             isCompleted ? "text-white/60" : "text-white/90"
           }`}
         >
-          {isCompleted
-            ? "all done 🎉"
-            : current?.title ?? "add your first task"}
+          {isCompleted ? "all done 🎉" : (current?.title ?? "add your first task")}
         </p>
-        <p className="text-xs text-white/60 mt-1">
-          {isCompleted ? "" : deadlineStr}
-        </p>
+        <p className="text-xs text-white/60 mt-1">{isCompleted ? "" : deadlineStr}</p>
       </div>
     </div>
   );
 }
 
-function DigitGroup({
-  value,
-  label,
-  pulse,
-}: {
-  value: string;
-  label: string;
-  pulse: boolean;
-}) {
+function DigitGroup({ value, label, pulse }: { value: string; label: string; pulse: boolean }) {
   return (
     <div className="flex flex-col items-center w-[56px] md:w-[80px]">
       <span
