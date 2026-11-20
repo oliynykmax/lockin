@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lockin",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [{ "pattern": "lockin.oliinyk.dev", "custom_domain": true }],
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"],
+  },
+  "observability": { "enabled": true },
+  "vars": {
+    "BETTER_AUTH_URL": "https://lockin.oliinyk.dev",
+    "GOOGLE_CLIENT_ID": "3922850272-233gqfi6br9lrpo9ipepguuv389332o3.apps.googleusercontent.com",
+    "GITHUB_CLIENT_ID": "Ov23liTULHGuYuhWk41e",
+  },
+  "secrets": { "required": ["BETTER_AUTH_SECRET", "GOOGLE_CLIENT_SECRET", "GITHUB_CLIENT_SECRET"] },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "lockin-db", "database_id": "4bc8d331-2e3c-4454-859b-a6e764722537" },
+  ],
+}

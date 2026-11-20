@@ -43,7 +43,7 @@ export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
       combined.setHours(h, m, 0, 0);
       onChange(combined);
     },
-    [hours, minutes, onChange]
+    [hours, minutes, onChange],
   );
 
   const handleTimeChange = useCallback(
@@ -58,7 +58,7 @@ export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
         onChange(combined);
       }
     },
-    [selectedDate, onChange]
+    [selectedDate, onChange],
   );
 
   const handleQuickOffset = useCallback(
@@ -70,7 +70,7 @@ export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
       onChange(future);
       setOpen(false);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleHoursBlur = useCallback(() => {
@@ -117,7 +117,7 @@ export function DateTimePicker({ value, onChange }: DateTimePickerProps) {
               variant="outline"
               className={cn(
                 "flex-1 justify-start text-left font-normal gap-2",
-                !selectedDate && "text-muted-foreground"
+                !selectedDate && "text-muted-foreground",
               )}
             >
               <CalendarIcon className="size-4" />

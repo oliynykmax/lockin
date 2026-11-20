@@ -2,7 +2,7 @@
 
 Task timer with two modes: countdown to deadline, or lock-in to track time spent.
 
-**[lockin-dob.pages.dev](https://lockin-dob.pages.dev)**
+**[lockin.oliinyk.dev](https://lockin.oliinyk.dev)**
 
 ## what it does
 
@@ -16,7 +16,8 @@ Task timer with two modes: countdown to deadline, or lock-in to track time spent
 
 ```bash
 bun install
-bun run dev
+bun run dev    # builds with Bun, then runs wrangler dev
+bun fmt && bun lint && bun check
 ```
 
 ## deploy
@@ -25,8 +26,8 @@ bun run dev
 bun run deploy
 ```
 
-Cloudflare Pages via Wrangler. Auto-deploys on commit.
+A Cloudflare Worker serves the SPA and the `/api` routes, with D1 for storage. See `ENVIRONMENT_SETUP.md` for secrets.
 
 ## stack
 
-React · Vite · Tailwind · Radix · Bun
+React · Tailwind · Radix · Bun · Cloudflare Workers · D1 · Better Auth
