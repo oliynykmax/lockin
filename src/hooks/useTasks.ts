@@ -65,9 +65,7 @@ export function useTasks() {
           }
         }
 
-        const mergedTasks = Array.from(mergedMap.values()).sort(
-          (a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0)
-        );
+        const mergedTasks = Array.from(mergedMap.values()).sort((a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0));
 
         const reconciled: Task[] = await apiFetch("/tasks", {
           method: "PUT",
@@ -141,21 +139,21 @@ export function useTasks() {
   const completeTask = useCallback((id: string) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === id ? {
-          ...t,
-          completed: !t.completed,
-          lockedInAt: null,
-          timeSpentMs: t.lockedInAt ? t.timeSpentMs + (now() - t.lockedInAt) : t.timeSpentMs,
-          updatedAt: now(),
-        } : t
-      )
+        t.id === id
+          ? {
+              ...t,
+              completed: !t.completed,
+              lockedInAt: null,
+              timeSpentMs: t.lockedInAt ? t.timeSpentMs + (now() - t.lockedInAt) : t.timeSpentMs,
+              updatedAt: now(),
+            }
+          : t,
+      ),
     );
   }, []);
 
   const editTask = useCallback((id: string, updates: Partial<Pick<Task, "title" | "deadline">>) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...updates, updatedAt: now() } : t))
-    );
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates, updatedAt: now() } : t)));
   }, []);
 
   const deleteTask = useCallback((id: string) => {
@@ -181,10 +179,8 @@ export function useTasks() {
   const addSubtask = useCallback((taskId: string, text: string) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === taskId
-          ? { ...t, subtasks: [...t.subtasks, { text: text.trim(), done: false }], updatedAt: now() }
-          : t
-      )
+        t.id === taskId ? { ...t, subtasks: [...t.subtasks, { text: text.trim(), done: false }], updatedAt: now() } : t,
+      ),
     );
   }, []);
 
@@ -194,21 +190,19 @@ export function useTasks() {
         t.id === taskId
           ? {
               ...t,
-              subtasks: t.subtasks.map((s, i) =>
-                i === subIndex ? { ...s, done: !s.done } : s
-              ),
+              subtasks: t.subtasks.map((s, i) => (i === subIndex ? { ...s, done: !s.done } : s)),
               updatedAt: now(),
             }
-          : t
-      )
+          : t,
+      ),
     );
   }, []);
 
   const deleteSubtask = useCallback((taskId: string, subIndex: number) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === taskId ? { ...t, subtasks: t.subtasks.filter((_, i) => i !== subIndex), updatedAt: now() } : t
-      )
+        t.id === taskId ? { ...t, subtasks: t.subtasks.filter((_, i) => i !== subIndex), updatedAt: now() } : t,
+      ),
     );
   }, []);
 
@@ -218,9 +212,10 @@ export function useTasks() {
       prev.map((task) => {
         if (task.completed) return task;
         if (task.id === id) return { ...task, lockedInAt: t, updatedAt: t };
-        if (task.lockedInAt !== null) return { ...task, lockedInAt: null, timeSpentMs: task.timeSpentMs + (t - task.lockedInAt), updatedAt: t };
+        if (task.lockedInAt !== null)
+          return { ...task, lockedInAt: null, timeSpentMs: task.timeSpentMs + (t - task.lockedInAt), updatedAt: t };
         return task;
-      })
+      }),
     );
   }, []);
 
@@ -229,9 +224,14 @@ export function useTasks() {
     setTasks((prev) =>
       prev.map((task) =>
         task.id === id
-          ? { ...task, lockedInAt: null, timeSpentMs: task.lockedInAt ? task.timeSpentMs + (t - task.lockedInAt) : task.timeSpentMs, updatedAt: t }
-          : task
-      )
+          ? {
+              ...task,
+              lockedInAt: null,
+              timeSpentMs: task.lockedInAt ? task.timeSpentMs + (t - task.lockedInAt) : task.timeSpentMs,
+              updatedAt: t,
+            }
+          : task,
+      ),
     );
   }, []);
 

@@ -1,14 +1,15 @@
+import type { Handler } from "../_lib/context";
 import { createAuth } from "../_lib/auth";
-import { createDB, taskRowToClient } from "../_lib/db";
+import { createDB, taskRowToClient, type TaskRow } from "../_lib/db";
 
-export const onRequestGet: PagesFunction = async (context) => {
-  const auth = createAuth(context.env as any);
+export const onRequestGet: Handler = async (context) => {
+  const auth = createAuth(context.env);
   const session = await auth.api.getSession({ headers: context.request.headers });
   if (!session?.user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
-  const db = createDB(context.env.DB as D1Database);
+  const db = createDB(context.env.DB);
   const rows = await db
     .selectFrom("task")
     .selectAll()
@@ -17,26 +18,23 @@ export const onRequestGet: PagesFunction = async (context) => {
     .orderBy("created_at", "asc")
     .execute();
 
-  return new Response(
-    JSON.stringify(rows.map(taskRowToClient)),
-    { headers: { "Content-Type": "application/json" } },
-  );
+  return new Response(JSON.stringify(rows.map(taskRowToClient)), { headers: { "Content-Type": "application/json" } });
 };
 
-export const onRequestPost: PagesFunction = async (context) => {
-  const auth = createAuth(context.env as any);
+export const onRequestPost: Handler = async (context) => {
+  const auth = createAuth(context.env);
   const session = await auth.api.getSession({ headers: context.request.headers });
   if (!session?.user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
-  const body = await context.request.json() as {
+  const body = (await context.request.json()) as {
     title: string;
     deadline?: string | null;
     id?: string;
   };
 
-  const db = createDB(context.env.DB as D1Database);
+  const db = createDB(context.env.DB);
   const now = Date.now();
   const id = body.id ?? now.toString(36) + Math.random().toString(36).slice(2, 7);
 
@@ -46,7 +44,7 @@ export const onRequestPost: PagesFunction = async (context) => {
     .select(db.fn.max("sort_order").as("max_order"))
     .where("user_id", "=", session.user.id)
     .execute();
-  const sortOrder = (Number(maxOrder[0]?.max_order ?? 0) ?? 0) + 1;
+  const sortOrder = Number(maxOrder[0]?.max_order ?? 0) + 1;
 
   const row = {
     id,
@@ -64,21 +62,21 @@ export const onRequestPost: PagesFunction = async (context) => {
 
   await db.insertInto("task").values(row).execute();
 
-  return new Response(
-    JSON.stringify(taskRowToClient(row as any)),
-    { headers: { "Content-Type": "application/json" }, status: 201 },
-  );
+  return new Response(JSON.stringify(taskRowToClient(row)), {
+    headers: { "Content-Type": "application/json" },
+    status: 201,
+  });
 };
 
 // Bulk sync: reconcile local changes with server
-export const onRequestPut: PagesFunction = async (context) => {
-  const auth = createAuth(context.env as any);
+export const onRequestPut: Handler = async (context) => {
+  const auth = createAuth(context.env);
   const session = await auth.api.getSession({ headers: context.request.headers });
   if (!session?.user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
-  const body = await context.request.json() as {
+  const body = (await context.request.json()) as {
     tasks: Array<{
       id: string;
       title: string;
@@ -92,7 +90,7 @@ export const onRequestPut: PagesFunction = async (context) => {
     }>;
   };
 
-  const db = createDB(context.env.DB as D1Database);
+  const db = createDB(context.env.DB);
 
   // Get existing server tasks
   const existing = await db
@@ -103,8 +101,8 @@ export const onRequestPut: PagesFunction = async (context) => {
 
   const existingMap = new Map(existing.map((r) => [r.id, r.updated_at]));
 
-  const toInsert: any[] = [];
-  const toUpdate: any[] = [];
+  const toInsert: TaskRow[] = [];
+  const toUpdate: TaskRow[] = [];
 
   for (let i = 0; i < body.tasks.length; i++) {
     const task = body.tasks[i]!;
@@ -159,11 +157,7 @@ export const onRequestPut: PagesFunction = async (context) => {
       .execute();
   }
   for (const row of toDelete) {
-    await db
-      .deleteFrom("task")
-      .where("id", "=", row.id)
-      .where("user_id", "=", session.user.id)
-      .execute();
+    await db.deleteFrom("task").where("id", "=", row.id).where("user_id", "=", session.user.id).execute();
   }
 
   // Return the server's full task list after sync
@@ -175,8 +169,5 @@ export const onRequestPut: PagesFunction = async (context) => {
     .orderBy("created_at", "asc")
     .execute();
 
-  return new Response(
-    JSON.stringify(rows.map(taskRowToClient)),
-    { headers: { "Content-Type": "application/json" } },
-  );
+  return new Response(JSON.stringify(rows.map(taskRowToClient)), { headers: { "Content-Type": "application/json" } });
 };

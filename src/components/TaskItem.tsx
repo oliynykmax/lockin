@@ -42,7 +42,7 @@ export function TaskItem({
   const [editing, setEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDeadline, setEditDeadline] = useState<Date | undefined>(
-    task.deadline ? new Date(task.deadline) : undefined
+    task.deadline ? new Date(task.deadline) : undefined,
   );
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,15 +69,9 @@ export function TaskItem({
     }
   }, [task.title, task.deadline, editing]);
 
-  const remaining = task.deadline
-    ? new Date(task.deadline).getTime() - Date.now()
-    : null;
+  const remaining = task.deadline ? new Date(task.deadline).getTime() - Date.now() : null;
 
-  const timerText = task.completed
-    ? "completed ✓"
-    : remaining !== null
-      ? formatTimerSmall(remaining)
-      : "no deadline";
+  const timerText = task.completed ? "completed ✓" : remaining !== null ? formatTimerSmall(remaining) : "no deadline";
 
   const isOverdue = !task.completed && remaining !== null && remaining <= 0;
   const isNoDeadline = !task.completed && remaining === null;
@@ -109,7 +103,7 @@ export function TaskItem({
         "group bg-card border border-border rounded-xl px-4 py-4 transition-all animate-task-enter",
         "hover:border-border/80 hover:shadow-md",
         task.completed && "opacity-60",
-        task.lockedInAt && !task.completed && "border-lockin/60 bg-lockin/5 dark:bg-lockin/10"
+        task.lockedInAt && !task.completed && "border-lockin/60 bg-lockin/5 dark:bg-lockin/10",
       )}
     >
       {editing ? (
@@ -131,20 +125,11 @@ export function TaskItem({
           />
           <DateTimePicker value={editDeadline} onChange={setEditDeadline} />
           <div className="flex gap-2 justify-end pt-1">
-            <Button
-              size="sm"
-              onClick={handleSaveEdit}
-              className="rounded-full font-semibold shadow-sm"
-            >
+            <Button size="sm" onClick={handleSaveEdit} className="rounded-full font-semibold shadow-sm">
               <Check className="size-3.5" />
               save
             </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleCancelEdit}
-              className="rounded-full"
-            >
+            <Button size="sm" variant="ghost" onClick={handleCancelEdit} className="rounded-full">
               cancel
             </Button>
           </div>
@@ -152,13 +137,14 @@ export function TaskItem({
       ) : (
         /* ── View mode ── */
         <div className="flex items-start gap-3">
-          {/* Checkbox */}            <button
+          {/* Checkbox */}{" "}
+          <button
             onClick={() => onComplete(task.id)}
             className={cn(
               "mt-0.5 flex-shrink-0 w-9 h-9 rounded-full border-2 flex items-center justify-center transition-all duration-300",
               task.completed
                 ? "bg-primary border-primary animate-check-pop"
-                : "border-primary/40 hover:border-primary hover:bg-primary/10 hover:scale-110 active:scale-90"
+                : "border-primary/40 hover:border-primary hover:bg-primary/10 hover:scale-110 active:scale-90",
             )}
             aria-label={task.completed ? "Mark as incomplete" : "Complete task"}
             aria-pressed={task.completed}
@@ -177,14 +163,13 @@ export function TaskItem({
               </svg>
             )}
           </button>
-
           {/* Body */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span
                 className={cn(
                   "font-[family-name:var(--font-display)] text-base font-semibold tracking-tight",
-                  task.completed && "line-through text-muted-foreground"
+                  task.completed && "line-through text-muted-foreground",
                 )}
               >
                 {task.title}
@@ -201,7 +186,7 @@ export function TaskItem({
                   isOverdue && "text-overdue",
                   isNoDeadline && "text-muted-foreground font-normal",
                   !isOverdue && !isNoDeadline && !task.completed && "text-primary",
-                  task.completed && "text-muted-foreground"
+                  task.completed && "text-muted-foreground",
                 )}
               >
                 {timerText}
@@ -209,9 +194,7 @@ export function TaskItem({
             </div>
 
             {task.deadline && !task.completed && (
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {formatDeadline(task.deadline)}
-              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">{formatDeadline(task.deadline)}</p>
             )}
 
             {/* Subtasks */}
@@ -227,9 +210,7 @@ export function TaskItem({
                     <span
                       className={cn(
                         "text-sm flex-1 min-w-0 transition-colors",
-                        st.done
-                          ? "line-through text-muted-foreground"
-                          : "text-foreground/80"
+                        st.done ? "line-through text-muted-foreground" : "text-foreground/80",
                       )}
                     >
                       {st.text}
@@ -274,7 +255,6 @@ export function TaskItem({
               </div>
             )}
           </div>
-
           {/* Actions */}
           <div className="flex items-center gap-0.5 flex-shrink-0 mt-0.5">
             {!task.completed && (

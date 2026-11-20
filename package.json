@@ -1,29 +1,27 @@
 {
   "name": "lockin",
-  "module": "index.ts",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bunx vite",
-    "dev:full": "wrangler pages dev --proxy=5173",
-    "build": "bunx vite build",
-    "preview": "bunx vite preview",
-    "deploy": "bun run build && wrangler pages deploy dist --project-name=lockin --branch=main"
+    "dev": "bun run build && wrangler dev",
+    "build": "bun scripts/build.ts",
+    "deploy": "bun run build && wrangler deploy",
+    "cf-typegen": "wrangler types",
+    "fmt": "bun fmt",
+    "lint": "bun lint",
+    "check": "bun check"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260418.1",
-    "@tailwindcss/vite": "^4.2.2",
     "@types/bun": "latest",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
+    "bun-plugin-tailwind": "^0.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.8.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
-    "vite": "^8.0.8",
-    "wrangler": "^4.83.0"
+    "wrangler": "^4.165.0"
   },
   "peerDependencies": {
     "typescript": "^6.0.3"
