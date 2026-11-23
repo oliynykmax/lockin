@@ -9,7 +9,8 @@
     "cf-typegen": "wrangler types",
     "fmt": "bun fmt",
     "lint": "bun lint",
-    "check": "bun check"
+    "check": "bun check",
+    "deploy:fresh": "bun run build && wrangler deploy && wrangler d1 migrations apply DB --remote"
   },
   "devDependencies": {
     "@types/bun": "latest",
