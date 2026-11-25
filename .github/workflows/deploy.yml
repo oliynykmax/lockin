@@ -1,0 +1,51 @@
+name: Deploy
+
+# Deploys the default branch to Cloudflare Workers. Configure it in the repository's
+# "production" environment (Settings > Environments):
+#   secret   CLOUDFLARE_API_TOKEN   token with Workers Scripts Edit and D1 Edit
+#   variable CLOUDFLARE_ACCOUNT_ID  target account
+#   variable DEPLOY_ENABLED         "true" to turn deploys on
+#   variable DEPLOY_DOMAIN          optional custom domain; without it the Worker uses workers.dev
+#   variable DEPLOY_VARS            optional Worker variables, one KEY:VALUE per line
+# Add a required reviewer to the environment to approve each deploy.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: canary
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOY_DOMAIN: ${{ vars.DEPLOY_DOMAIN }}
+          DEPLOY_VARS: ${{ vars.DEPLOY_VARS }}
+        run: |
+          args=()
+          if [ -n "$DEPLOY_DOMAIN" ]; then args+=(--domain "$DEPLOY_DOMAIN"); fi
+          while IFS= read -r line; do
+            if [ -n "$line" ]; then args+=(--var "$line"); fi
+          done <<< "$DEPLOY_VARS"
+          bunx wrangler deploy "${args[@]}"
